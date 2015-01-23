@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 
-##Comment
+
 #Set parameters for the run
 
 # -MinReads  Minimum coverage required at a locus in an individual to apply a binomial test and call a genotype.
