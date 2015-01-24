@@ -1,0 +1,57 @@
+AftrRAD version history since v3.0.  If you need information about versions prior to 3.0, contact Mike (sovic.1@osu.edu).
+
+
+v3.0	(10 Aug 2014)
+
+-Configurable run parameters are now set as command line arguments
+-Added arguments to provide path to Data and Barcodes files
+-Fixes that keep the program from crashing if a sample doesn't have any unique reads assigned to it
+-Renamed some variables and temp files
+
+
+v3.1	(29 Aug 2014)
+
+-Added functionality to identify and remove paralogous loci that are alternatively fixed (scored as heterozygous in all samples)
+-Small bug fix related to the format of the BarcodeInfo files
+-Updated AftrRAD figure in the GettingStarted folder
+
+
+v3.2	(2 Oct 2014)
+
+-Added command line arguments for the max number of indels between two alleles and the min length of homopolymers within a read.  Also added the option to analyze data that are already demultiplexed, though this hasn't really been tested very well yet.
+-Program now uses the files in the Barcodes directory to determine what data file to look for, as opposed to the other way around.
+-Changed minDepth default to 5
+
+
+v3.3	(8 Oct 2014)
+
+-Added command line arguments related to calling genotypes in Monomorphics.pl.
+-Updated SNAPP and fastsimcoal formatting scripts, along with associated OutputBiallelicSingleSNPs.R to make them compatible with versions 3.0+.
+
+
+v4.0	(7 Jan 2015)
+
+-Bug fix at line 462 of OutputFastSimCoal_JointSFS.pl
+-Updated help documentation by adding command line arguments that were missing.
+-Improved annotations in the script
+-Changed system calls for mkdir to the mkdir function in perl.  This allow an easy check to see if the directory already exists before creating, eliminating a warning message that was sometimes printed to the terminal window.
+-Updated information printed to RunInfo/Report files.  These now include the run parameters used.
+-Updated RunInfo file names to reflect data file names, as opposed to generic file numbers.
+-Slight adjustment to heuristic search for seqs >80 bp.
+-Added MaxH command line argument related to identifying alternatively fixed paralogous loci
+-Renamed Monomorphics.pl to Genotype.pl, and renamed Polymorphics.pl to FilterSNPs.pl.
+-Added command line arguments to FilterSNPs
+-Genotype.pl now performs identification and plotting of SNP locations.
+-Monomorphic loci are now genotyped in FilterSNPs, based on the percent coverage entered.
+-Updated Formatting scripts to look for the files they need first, and the prompt the user to enter filenames only if necessary.
+-Bug fix to eliminate errors in creating SNPLocations.pl file when the number of indels allowed is relatively high.  This was fixed in PlotSNPLocations.R.
+
+
+v4.1	(23 Jan 2015)
+
+-Genotypes.pl line 1087 and FilterSNPs.pl line 685 edited to MonomorphicsNoParalogs.txt from MonomorphicLoci.txt.  This fixes a bug in which the incorrect number of total monomorphic loci was printed to the MasterReport.txt file..
+-Updates to User Manual
+-Edits to ScoreDuplicates.pl to eliminate the necessity to include 'Individual' in the 'Replicates.txt" file, and also clean up the output file.  Also added some additional metrics.
+-Edits to OutputFastSimCoal_SingleSFS.pl and OutputFastSimCoal_JointSFS.pl to provide an option for resampling the data for nonparametric approaches to generating confidence intervals.  This also fixed a small bug in earlier versions in which the scripts were calculating the length of monomorphic loci as one base longer than they really were, which was leading to inflated numbers of monomorphic sites in the SFS.
+-Added command line argument to OutputSNAPP.pl to use a subset of the samples.
+-Changed numIndels default to 3 from 2.
