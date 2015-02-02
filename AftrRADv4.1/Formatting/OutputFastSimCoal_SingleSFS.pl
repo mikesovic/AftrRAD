@@ -11,6 +11,7 @@ print "Before running this script, make sure that you have edited the file \"Gen
 # -num  Number of resampled datasets to create (default 1).
 # -prop Percent of loci sampled to create the resampled datasets (1-99).
 # -rep  Flag indicating whether to sample with replacement when generating resampled datasets.  Default is 0 (sample loci without replacement).
+# -unlinked Flag indicating whether to include only unlinked SNPs in the site frequency spectrum.  Default is 0 (all SNPs are included).
 
 my %RunArguments = ();
 
@@ -19,6 +20,7 @@ $RunArguments{resamp} = 0;
 $RunArguments{num} = 1;
 $RunArguments{pct} = 50;
 $RunArguments{rep} = 0;
+$RunArguments{unlinked} = 0;
 
 
 for my $argument (@ARGV)  {
@@ -32,11 +34,13 @@ for my $argument (@ARGV)  {
 		print "It requires a SNPMatrix file with no missing data (SNPMatrix_100.X.txt) in the Output/Genotypes folder, and also requires that an outgroup sample is included as the first sample in this SNPMatrix file.\n";
 		
 		print "\n\nCommand line arguments available for this script...\n\n";
+		print "unlinked\nFlag indicating whether to include only unlinked SNPs in the site frequency spectrum.\n";
+		print "Default is 0 (all SNPs are included)\n\n";
 		print "resamp\nFlag indicating whether to create resampled datasets.\n";
-		print "Set this to 1 to perform resampling.\n";
-		print "num\nNumber of resampled datasets to create (Default is 1).\n";
+		print "Set this to 1 to perform resampling.\n\n";
+		print "num\nNumber of resampled datasets to create (Default is 1).\n\n";
 		
-		print "pct\nPercent of loci sampled to create each resampled dataset (1-99, default is 50).\n";
+		print "pct\nPercent of loci sampled to create each resampled dataset (1-99, default is 50).\n\n";
 		
 		print "rep\nFlag indicating whether to sample with replacement when generating resampled datasets.  Default is 0 (sample loci without replacement).\n";
 		exit;
@@ -57,6 +61,7 @@ my $resamp = $RunArguments{resamp};
 my $NumResampReps = $RunArguments{num};
 my $PctLoci = $RunArguments{pct};
 my $Replacement = $RunArguments{rep};
+my $Unlinked = $RunArguments{unlinked};
 
 
 my $FileName;
@@ -325,8 +330,15 @@ if ($resamp == 1)  {
 
 		#Each line in UnlinkedBiallelicSNPsRaw.txt ends with \t\n and has quotes.  Remove these.
 
-		open SNPFILE, "TempFiles/UnlinkedBiallelicSNPsRaw.txt" or die$!;
-		open SNPFILEUPDATE, ">TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
+		if ($Unlinked == 1)  {
+			open SNPFILE, "TempFiles/UnlinkedBiallelicSNPsRaw.txt" or die$!;
+		}
+	
+		else {
+			open SNPFILE, "TempFiles/AllBiallelicSNPsRaw.txt" or die$!;
+		}	
+		
+		open SNPFILEUPDATE, ">TempFiles/BiallelicSNPs_SFS.txt" or die$!;
  
 		while (<SNPFILE>)  {
 	
@@ -410,7 +422,7 @@ if ($resamp == 1)  {
 		my $CurrentAncestralAllele;
 		my $CurrentDerivedAllele;
 			
-		open TOTALBIALLELICS, "TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
+		open TOTALBIALLELICS, "TempFiles/BiallelicSNPs_SFS.txt" or die$!;
 
 		my @UnlinkedBiallelicsNames = ();
 
@@ -430,7 +442,7 @@ if ($resamp == 1)  {
 			my @CurrentSiteIndividualIDs = ();
 			my @CurrentSiteAlleles = ();
 	
-			open TOTALBIALLELICS, "TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
+			open TOTALBIALLELICS, "TempFiles/BiallelicSNPs_SFS.txt" or die$!;
 		
 			my $TempCounter = 0;
 		
@@ -693,9 +705,18 @@ else {		#no resampling
 	
 	#Each line in UnlinkedBiallelicSNPsRaw.txt ends with \t\n and has quotes.  Remove these.
 	
-	open SNPFILE, "TempFiles/UnlinkedBiallelicSNPsRaw.txt" or die$!;
-	open SNPFILEUPDATE, ">TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
-	 
+	if ($Unlinked == 1)  {
+		open SNPFILE, "TempFiles/UnlinkedBiallelicSNPsRaw.txt" or die$!;
+	}
+	
+	else {
+		open SNPFILE, "TempFiles/AllBiallelicSNPsRaw.txt" or die$!;
+	}
+	
+	
+	open SNPFILEUPDATE, ">TempFiles/BiallelicSNPs_SFS.txt" or die$!;
+	
+	
 	while (<SNPFILE>)  {
 		
 		if ($_ =~ /[A-Za-z1-9]/)  {
@@ -774,7 +795,7 @@ else {		#no resampling
 	my $CurrentAncestralAllele;
 	my $CurrentDerivedAllele;
 				
-	open TOTALBIALLELICS, "TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
+	open TOTALBIALLELICS, "TempFiles/BiallelicSNPs_SFS.txt" or die$!;
 	
 	my @UnlinkedBiallelicsNames = ();
 	
@@ -794,7 +815,7 @@ else {		#no resampling
 		my @CurrentSiteIndividualIDs = ();
 		my @CurrentSiteAlleles = ();
 		
-		open TOTALBIALLELICS, "TempFiles/UnlinkedBiallelicSNPs.txt" or die$!;
+		open TOTALBIALLELICS, "TempFiles/BiallelicSNPs_SFS.txt" or die$!;
 			
 		my $TempCounter = 0;
 			
