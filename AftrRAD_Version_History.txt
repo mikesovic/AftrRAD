@@ -55,3 +55,28 @@ v4.1	(23 Jan 2015)
 -Edits to OutputFastSimCoal_SingleSFS.pl and OutputFastSimCoal_JointSFS.pl to provide an option for resampling the data for nonparametric approaches to generating confidence intervals.  This also fixed a small bug in earlier versions in which the scripts were calculating the length of monomorphic loci as one base longer than they really were, which was leading to inflated numbers of monomorphic sites in the SFS.
 -Added command line argument to OutputSNAPP.pl to use a subset of the samples.
 -Changed numIndels default to 3 from 2.
+
+v5.0 (11 Feb 2016; requires installation of Parallel:ForkManager)
+
+-Added option to parallelize demultiplexing and mafft alignment portions of AftrRAD.
+-Updated portion of AftrRAD.pl related to running demultiplexed data to reduce RAM requirements. 
+-Added Formatting script OutputFASTA.pl.  Requires R script ID_Unlinked_SNPs.R.
+-Added TreeMix output script.  Requires R scripts OutputTreeMix_Linked.R and OutputTreeMix_Unlinked.R.
+-Added Migrate output script.
+-Added SortHaplotypes and SortSNPMatrix scripts (Formatting).
+-Added Calculate_DStat_pop.pl script. Requires R script Pop_DStat_Resamp_Binomial.R.
+-Edits at lines 188-190 of ScoreDuplicates.pl to fix bug related to 'Individual' in the sample names.
+-Revised scripts for producing FastSimCoal SFS.  New versions include option for multidimensional SFS and for folded SFS (no outgroup required).
+-Revised OutputSNAPP.pl file to include options for printing either all sites or just polymorphic sites and unlinked or all SNPs.
+-Created script to calculate observed heterozygosity values (Calculate_Heterozygosity.pl).  Requires R script Calc_Het.R.  Calculations can be done for one or multiple populations.
+-Updated "Identifying and removing paralogous loci" section in AftrRAD.pl for efficiency.
+-Added option to parallelize first step in Genotypes.pl.
+-Fixed bug in Genotypes.pl that printed sample names to the file 'GoodSampleNames.txt' twice.
+-Added option to Genotypes.pl to only genotype a specified subset of samples.
+-Added line in FilterSNPs.pl to print a header row in the Monomorphics_X.txt file.
+
+
+
+
+
+
