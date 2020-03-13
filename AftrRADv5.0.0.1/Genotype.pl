@@ -637,7 +637,7 @@ for my $count (@NACounts)  {
 	push (@NAProportions, $TempProportion);
 }
 
-open NAPROPORTIONSFILE, ">out/OutputRunInfo/MissingDataProportions.txt" or die$!;
+open NAPROPORTIONSFILE, ">OutputRunInfo/MissingDataProportions.txt" or die$!;
 
 for my $name (@SampleNames)  {
 	
@@ -1028,7 +1028,7 @@ elsif (-e "out/TempFiles/RawReadCountFiles/RawReadCounts_NonParalogous$GoodSampl
 }
 
 else {				#in case the first two don't exist - this is probably unnecessary now that samples with no data are automatically omitted from the dataset.
-	open RAWGENOSREAD, "TemwpFiles/RawReadCountFiles/RawReadCounts_NonParalogous$GoodSampleNames[2].txt" or die$!;
+	open RAWGENOSREAD, "out/TempFiles/RawReadCountFiles/RawReadCounts_NonParalogous$GoodSampleNames[2].txt" or die$!;
 	open RAWGENOSWRITE, ">out/TempFiles/RawReadCounts_NonParalogousAllPoly$GoodSampleNames[2].txt" or die$!;
 }
 	
