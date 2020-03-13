@@ -637,7 +637,7 @@ for my $count (@NACounts)  {
 	push (@NAProportions, $TempProportion);
 }
 
-open NAPROPORTIONSFILE, ">OutputRunInfo/MissingDataProportions.txt" or die$!;
+open NAPROPORTIONSFILE, ">out/Output/RunInfo/MissingDataProportions.txt" or die$!;
 
 for my $name (@SampleNames)  {
 	
