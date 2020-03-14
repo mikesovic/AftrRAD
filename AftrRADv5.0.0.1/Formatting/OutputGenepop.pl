@@ -5,11 +5,13 @@ use strict;
 
 #This script creates a Genepop input file from a Haplotypes file.  Note that the 'POP' flags required in a Genepop input file must be added by hand after running this script.
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
+
 #First, check to see how many Haplotypes files exist.  If only one, use this.  If more than one, prompt the user to choose one.
 
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -45,7 +47,7 @@ else {
 
 my $Counter1 = 0;
 
-open HAPLOTYPEFILEWITHNA, "../Output/Genotypes/$FileName" or die$!;
+open HAPLOTYPEFILEWITHNA, "../out/Output/Genotypes/$FileName" or die$!;
 open STRUCTUREFILENONA, ">OutputStructure_Infile_Temp.txt" or die$!;
 
 	while (<HAPLOTYPEFILEWITHNA>)  {
@@ -230,7 +232,7 @@ my $SortCounter = 0;
 
 	
 	open INFILE, "GenepopInput_Temp2.txt" or die$!;
-	open OUTFILE, ">GenepopInput.txt" or die$!;
+	open OUTFILE, ">../out/formatted_files/GenepopInput.txt" or die$!;
 	
 	my @UnsortedArray = ();
 	

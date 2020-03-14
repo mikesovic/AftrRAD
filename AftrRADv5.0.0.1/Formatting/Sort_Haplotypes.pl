@@ -2,11 +2,11 @@
 use strict;
 use warnings;
 
-
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes";
+opendir GENOS, "../out/Output/Genotypes";
 my @AllFiles = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -39,7 +39,7 @@ else {
 
 
 
-open HAPS, "../Output/Genotypes/$FileName" or die$!;
+open HAPS, "../out/Output/Genotypes/$FileName" or die$!;
 
 my $Counter = 0;
 
@@ -79,7 +79,7 @@ my @SortedArray = sort {lc($a) cmp lc($b)} keys %UnsortedHash;
 $FileName =~ s/.txt$//;
 my $NewFileName = $FileName."_Sorted";
 
-open OUT, ">../Output/Genotypes/$NewFileName.txt" or die$!;
+open OUT, ">../out/formatted_files/$NewFileName.txt" or die$!;
 
 print OUT "$LocusNames";
 

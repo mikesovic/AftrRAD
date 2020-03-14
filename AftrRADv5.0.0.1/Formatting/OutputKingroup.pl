@@ -3,9 +3,11 @@ use warnings;
 use strict;
 
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
+
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -41,8 +43,8 @@ else {
 # chomp($FileName);
 
 
-open HAPLOTYPES, "../Output/Genotypes/$FileName" or die$!;
-open INFILE, ">Kingroup_Infile.txt" or die$!;
+open HAPLOTYPES, "../out/Output/Genotypes/$FileName" or die$!;
+open INFILE, ">../out/formatted_files/Kingroup_Infile.txt" or die$!;
 
 my $LineCounter = 0;
 my @Array1;

@@ -2,6 +2,8 @@
 use warnings;
 use strict;
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
+
 #Set parameters for the run
 
 # -resamp Flag indicating whether to create resampled datasets.
@@ -79,7 +81,7 @@ my $ScaleMonos = $RunArguments{MonoScaled};
 my $FileName;
 
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -116,7 +118,7 @@ if ($Folded == 1)  {
 	
 	#Get the number of ingroup samples in the dataset
 	
-	open FILE, "../Output/Genotypes/$FileName" or die$!;
+	open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 	
 	my $NumLinesInFile = 0;
 	
@@ -170,7 +172,7 @@ if ($Folded == 1)  {
 		#Get the number of loci in the SNPMatrix file.
 		my $TotalNumSNPs;
 		
-		open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+		open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 		
 		while(<SNPMATRIX>)  {
 			my @LocusNames = split(/\t/,$_);
@@ -190,7 +192,7 @@ if ($Folded == 1)  {
 		
 		while(<RFILE>) {
 			if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-				print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+				print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 			}
 			
 			elsif ($_ =~ /NumLociToSample</)  {
@@ -380,7 +382,7 @@ if ($Folded == 1)  {
 			$RetainedReadLength = $SecondSplit[1];
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sample/) {
 						next;
@@ -398,7 +400,7 @@ if ($Folded == 1)  {
 			}	
 			
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 		
 			my @Monomorphics = ();
 	
@@ -567,7 +569,7 @@ if ($Folded == 1)  {
 		
 			#Create the SFS	
 				
-			open OUTFILE, ">ResampledSFS/$RepDataset.resamp_MAFpop0.obs" or die$!;		#Create file for current population to store DFS.
+			open OUTFILE, ">../out/formatted_files/ResampledSFS/$RepDataset.resamp_MAFpop0.obs" or die$!;		#Create file for current population to store DFS.
 			
 			print OUTFILE "1 observations\n";     #\t$NumMonomorphicLoci monomorphic loci scored in all\t$NumPolymorphicLoci polymorphic loci scored in all\t$ReadLength bases in each read\n";
 			
@@ -607,7 +609,7 @@ if ($Folded == 1)  {
 		
 		
 		
-		open FILE, "../Output/Genotypes/$FileName" or die$!;
+		open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 	
 		my @LocusNames = ();
@@ -751,7 +753,7 @@ if ($Folded == 1)  {
 			$RetainedReadLength = $SecondSplit[1];
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sample/) {
 						next;
@@ -769,7 +771,7 @@ if ($Folded == 1)  {
 			}
 			
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 		
 			my @Monomorphics = ();
 	
@@ -938,7 +940,7 @@ if ($Folded == 1)  {
 		
 		#Create the SFS	
 			
-		open OUTFILE, ">_MAFpop0.obs" or die$!;		#Create file for current population to store DFS.
+		open OUTFILE, ">../out/formatted_files/_MAFpop0.obs" or die$!;		#Create file for current population to store DFS.
 		
 		print OUTFILE "1 observations\n";     #\t$NumMonomorphicLoci monomorphic loci scored in all\t$NumPolymorphicLoci polymorphic loci scored in all\t$ReadLength bases in each read\n";
 		
@@ -985,7 +987,7 @@ else {		#SFS is unfolded (outgroup is included)
 	
 	#Get the number of ingroup samples in the dataset
 	
-	open FILE, "../Output/Genotypes/$FileName" or die$!;
+	open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 	
 	my $NumLinesInFile = 0;
 	
@@ -1047,7 +1049,7 @@ else {		#SFS is unfolded (outgroup is included)
 		#Get the number of loci in the SNPMatrix file.
 		my $TotalNumSNPs;
 		
-		open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+		open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 		
 		while(<SNPMATRIX>)  {
 			my @LocusNames = split(/\t/,$_);
@@ -1067,7 +1069,7 @@ else {		#SFS is unfolded (outgroup is included)
 		
 		while(<RFILE>) {
 			if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-				print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+				print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 			}
 			
 			elsif ($_ =~ /NumLociToSample</)  {
@@ -1263,7 +1265,7 @@ else {		#SFS is unfolded (outgroup is included)
 			
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sample/) {
 						next;
@@ -1281,7 +1283,7 @@ else {		#SFS is unfolded (outgroup is included)
 			}
 			
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 		
 			my @Monomorphics = ();
 	
@@ -1472,7 +1474,7 @@ else {		#SFS is unfolded (outgroup is included)
 		
 		
 		
-				open OUTFILE, ">ResampledSFS/$RepDataset.resamp_DAFpop0.obs" or die$!;		#Create file for current population to store DFS.
+				open OUTFILE, ">../out/formatted_files/ResampledSFS/$RepDataset.resamp_DAFpop0.obs" or die$!;		#Create file for current population to store DFS.
 		
 				print OUTFILE "1 observations\n";     #\t$NumMonomorphicLoci monomorphic loci scored in all\t$NumPolymorphicLoci polymorphic loci scored in all\t$ReadLength bases in each read\n";
 		
@@ -1524,7 +1526,7 @@ else {		#SFS is unfolded (outgroup is included)
 		#Clean up the names in SNPMatrix file.
 	
 	
-		open FILE, "../Output/Genotypes/$FileName" or die$!;
+		open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 	
 		my @LocusNames = ();
@@ -1673,7 +1675,7 @@ else {		#SFS is unfolded (outgroup is included)
 			
 
 		if ($RetainedReadLength =~ /All/) {
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 			while(<MONOMORPHICINALL>)  {
 				if ($_ =~ /Sample/) {
 					next;
@@ -1691,7 +1693,7 @@ else {		#SFS is unfolded (outgroup is included)
 		}
 			
 				
-		open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+		open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 			
 		my @Monomorphics = ();
 		
@@ -1882,7 +1884,7 @@ else {		#SFS is unfolded (outgroup is included)
 		
 		
 		
-		open OUTFILE, ">_DAFpop0.obs" or die$!;		#Create file for current population to store DFS.
+		open OUTFILE, ">../out/formatted_files/_DAFpop0.obs" or die$!;		#Create file for current population to store DFS.
 		
 		print OUTFILE "1 observations\n";     #\t$NumMonomorphicLoci monomorphic loci scored in all\t$NumPolymorphicLoci polymorphic loci scored in all\t$ReadLength bases in each read\n";
 		

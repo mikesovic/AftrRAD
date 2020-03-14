@@ -14,6 +14,7 @@ print "2) if creating unfolded SFS, the first sample in the SNPMatrix file shoul
 print "3) you know the number of individuals in each population, in the order they occur in the SNPMatrix file\n";
 print "4) you have data for more than one population.  If you have data from a single population, run the script OutputFastSimCoal_SinglePop.pl instead.\n\n";
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 #Set parameters for the run
 
@@ -55,7 +56,7 @@ for my $argument (@ARGV)  {
 		print "Default is 0 (all SNPs are included)\n\n";
 		print "resamp\nFlag indicating whether to create resampled datasets (resample loci).\n";
 		print "Set this to 1 to perform resampling.\n";
-		print "Resampled SNP datasets and associated SFS will be printed to folders \"ResampledDatasets\" and \"ResampledSFS\", respectively.\n\n";
+		print "Resampled SNP datasets and associated SFS will be printed to folders \"../out/formatted_files/ResampledDatasets\" and \"../out/formatted_files/ResampledSFS\", respectively.\n\n";
 		print "num\nNumber of resampled datasets to create (Default is 1).\n\n";
 		print "pct\nPercent of loci sampled to create each resampled dataset (1-99, default is 50).\n\n";
 		print "rep\nFlag indicating whether to sample with replacement when generating resampled datasets.  Default is 0 (sample loci without replacement).\n\n";
@@ -94,7 +95,7 @@ my $FileName;
 
 #read the SNPMatrix files available for the run
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -189,13 +190,13 @@ if ($multidim == 1) {
 				}
 				
 				
-				mkdir "ResampledDatasets" unless (-d "ResampledDatasets");
+				mkdir "../out/formatted_files/ResampledDatasets" unless (-d "../out/formatted_files/ResampledDatasets");
 				mkdir "ResampledSFS" unless (-d "ResampledSFS");
 				
 				#Get the number of loci in the SNPMatrix file.
 				my $TotalNumSNPs;
 				
-				open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+				open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 				
 				while(<SNPMATRIX>)  {
 					my @LocusNames = split(/\t/,$_);
@@ -215,7 +216,7 @@ if ($multidim == 1) {
 				
 				while(<RFILE>) {
 					if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-						print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+						print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 					}
 					
 					elsif ($_ =~ /NumLociToSample</)  {
@@ -255,12 +256,12 @@ if ($multidim == 1) {
 			
 					my $TempFileName = $FileName;
 					$TempFileName =~ s/.txt//;
-					system "mv ResampledDatasets/SNPMatrix_resamp.txt ResampledDatasets/$TempFileName.$RepDataset.txt";
+					system "mv ../out/formatted_files/ResampledDatasets/SNPMatrix_resamp.txt ../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt";
 					
 					
 					
 			
-					open FILE, "ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
+					open FILE, "../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
 					open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 			
 					my @LocusNames = ();
@@ -410,7 +411,7 @@ if ($multidim == 1) {
 					$RetainedReadLength = $SecondSplit[1];
 					
 					if ($RetainedReadLength =~ /All/) {
-						open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+						open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 						while(<MONOMORPHICINALL>)  {
 							if ($_ =~ /Sequence/) {
 								next;
@@ -429,7 +430,7 @@ if ($multidim == 1) {
 						close MONOMORPHICINALL;
 					}
 					
-					open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+					open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 					my @Monomorphics = ();
 			
@@ -782,7 +783,7 @@ if ($multidim == 1) {
 					
 						
 				
-						mkdir "ResampledSFS/Resample$RepDataset";
+						mkdir "../out/formatted_files/ResampledSFS/Resample$RepDataset";
 						
 						
 						my @SortedHashValues = sort { $a<=>$b } keys %DerivedCountsHash;
@@ -795,7 +796,7 @@ if ($multidim == 1) {
 						
 						
 						
-						open OUTFILE, ">ResampledSFS/Resample$RepDataset/_DSFS.obs" or die$!;
+						open OUTFILE, ">../out/formatted_files/ResampledSFS/Resample$RepDataset/_DSFS.obs" or die$!;
 						
 						print OUTFILE "1 observations\n";
 						
@@ -822,7 +823,7 @@ if ($multidim == 1) {
 				system "rm TempFiles/*";
 				system "rmdir TempFiles";
 			
-		print "Resampled folded site frequency spectra have been generated and printed to folder ResampledSFS in Formatting directory\n";	
+		print "Resampled folded site frequency spectra have been generated and printed to folder ../out/formatted_files/ResampledSFS in Formatting directory\n";	
 			
 		}
 		
@@ -845,7 +846,7 @@ if ($multidim == 1) {
 			#Clean up the names in SNPMatrix file.
 				
 				
-			open FILE, "../Output/Genotypes/$FileName" or die$!;
+			open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 			open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 				
 			my @LocusNames = ();
@@ -996,7 +997,7 @@ if ($multidim == 1) {
 			$RetainedReadLength = $SecondSplit[1];
 				
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sequence/) {
 						next;
@@ -1016,7 +1017,7 @@ if ($multidim == 1) {
 			}
 			
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 			my @Monomorphics = ();
 			
@@ -1371,7 +1372,7 @@ if ($multidim == 1) {
 			$DerivedCountsHash{$MonomorphicKey} = $CurrentMonoValue+$TotalMonomorphicSites;
 						
 						
-			open OUTFILE, ">_DSFS.obs" or die$!;
+			open OUTFILE, ">../out/formatted_files/_DSFS.obs" or die$!;
 			print OUTFILE "1 observations\n";
 						
 			print OUTFILE "$NumPops\t";
@@ -1422,13 +1423,13 @@ if ($multidim == 1) {
 			}
 				
 				
-			mkdir "ResampledDatasets" unless (-d "ResampledDatasets");
-			mkdir "ResampledSFS" unless (-d "ResampledSFS");
+			mkdir "../out/formatted_files/ResampledDatasets" unless (-d "../out/formatted_files/ResampledDatasets");
+			mkdir "../out/formatted_files/ResampledSFS" unless (-d "../out/formatted_files/ResampledSFS");
 				
 			#Get the number of loci in the SNPMatrix file.
 			my $TotalNumSNPs;
 				
-			open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+			open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 				
 			while(<SNPMATRIX>)  {
 				my @LocusNames = split(/\t/,$_);
@@ -1448,7 +1449,7 @@ if ($multidim == 1) {
 				
 			while(<RFILE>) {
 				if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-					print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+					print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 				}
 					
 				elsif ($_ =~ /NumLociToSample</)  {
@@ -1488,12 +1489,12 @@ if ($multidim == 1) {
 			
 				my $TempFileName = $FileName;
 				$TempFileName =~ s/.txt//;
-				system "mv ResampledDatasets/SNPMatrix_resamp.txt ResampledDatasets/$TempFileName.$RepDataset.txt";
+				system "mv ../out/formatted_files/ResampledDatasets/SNPMatrix_resamp.txt ../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt";
 					
 					
 					
 			
-				open FILE, "ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
+				open FILE, "../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
 				open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 			
 				my @LocusNames = ();
@@ -1645,7 +1646,7 @@ if ($multidim == 1) {
 				$RetainedReadLength = $SecondSplit[1];
 				
 				if ($RetainedReadLength =~ /All/) {
-					open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+					open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 					while(<MONOMORPHICINALL>)  {
 						if ($_ =~ /Sequence/) {
 							next;
@@ -1664,7 +1665,7 @@ if ($multidim == 1) {
 					close MONOMORPHICINALL;
 				}
 				
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 				my @Monomorphics = ();
 			
@@ -1925,7 +1926,7 @@ if ($multidim == 1) {
 						
 						
 				
-				mkdir "ResampledSFS/Resample$RepDataset";
+				mkdir "../out/formatted_files/ResampledSFS/Resample$RepDataset";
 						
 						
 				my @SortedHashValues = sort { $a<=>$b } keys %DerivedCountsHash;
@@ -1938,7 +1939,7 @@ if ($multidim == 1) {
 						
 						
 						
-				open OUTFILE, ">ResampledSFS/Resample$RepDataset/_DSFS.obs" or die$!;
+				open OUTFILE, ">../out/formatted_files/ResampledSFS/Resample$RepDataset/_DSFS.obs" or die$!;
 						
 				print OUTFILE "1 observations\n";
 						
@@ -1963,7 +1964,7 @@ if ($multidim == 1) {
 				system "rm TempFiles/*";
 				system "rmdir TempFiles";
 						
-				print "Resampled unfolded site frequency spectra have been generated and printed to folder ResampledSFS in Formatting directory\n";	
+				print "Resampled unfolded site frequency spectra have been generated and printed to folder ../out/formatted_files/ResampledSFS in Formatting directory\n";	
 					
 				
 			
@@ -1987,7 +1988,7 @@ if ($multidim == 1) {
 			#Clean up the names in SNPMatrix file.
 				
 				
-			open FILE, "../Output/Genotypes/$FileName" or die$!;
+			open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 			open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 				
 			my @LocusNames = ();
@@ -2368,7 +2369,7 @@ if ($multidim == 1) {
 			$RetainedReadLength = $SecondSplit[1];
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sequence/) {
 						next;
@@ -2387,7 +2388,7 @@ if ($multidim == 1) {
 				close MONOMORPHICINALL;
 			}
 				
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 					
 			my @Monomorphics = ();
 				
@@ -2431,7 +2432,7 @@ if ($multidim == 1) {
 				
 				
 				
-			open OUTFILE, ">_DSFS.obs" or die$!;
+			open OUTFILE, ">../out/formatted_files/_DSFS.obs" or die$!;
 				
 			print OUTFILE "1 observations\n";
 				
@@ -2490,13 +2491,13 @@ else {	#outputing joint SFS's
 			}
 				
 				
-			mkdir "ResampledDatasets" unless (-d "ResampledDatasets");
-			mkdir "ResampledSFS" unless (-d "ResampledSFS");
+			mkdir "../out/formatted_files/ResampledDatasets" unless (-d "../out/formatted_files/ResampledDatasets");
+			mkdir "../out/formatted_files/ResampledSFS" unless (-d "../out/formatted_files/ResampledSFS");
 				
 			#Get the number of loci in the SNPMatrix file.
 			my $TotalNumSNPs;
 				
-			open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+			open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 				
 			while(<SNPMATRIX>)  {
 				my @LocusNames = split(/\t/,$_);
@@ -2516,7 +2517,7 @@ else {	#outputing joint SFS's
 				
 			while(<RFILE>) {
 				if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-					print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+					print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 				}
 					
 				elsif ($_ =~ /NumLociToSample</)  {
@@ -2556,12 +2557,12 @@ else {	#outputing joint SFS's
 			
 				my $TempFileName = $FileName;
 				$TempFileName =~ s/.txt//;
-				system "mv ResampledDatasets/SNPMatrix_resamp.txt ResampledDatasets/$TempFileName.$RepDataset.txt";
+				system "mv ../out/formatted_files/ResampledDatasets/SNPMatrix_resamp.txt ../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt";
 					
 					
 					
 			
-				open FILE, "ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
+				open FILE, "../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
 				open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 			
 				my @LocusNames = ();
@@ -2711,7 +2712,7 @@ else {	#outputing joint SFS's
 				$RetainedReadLength = $SecondSplit[1];
 					
 				if ($RetainedReadLength =~ /All/) {
-					open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+					open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 					while(<MONOMORPHICINALL>)  {
 						if ($_ =~ /Sequence/) {
 							next;
@@ -2730,7 +2731,7 @@ else {	#outputing joint SFS's
 					close MONOMORPHICINALL;
 				}
 				
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 				my @Monomorphics = ();
 			
@@ -2961,7 +2962,7 @@ else {	#outputing joint SFS's
 			
 				
 				
-				mkdir "ResampledSFS/Resample$RepDataset";
+				mkdir "../out/formatted_files/ResampledSFS/Resample$RepDataset";
 			
 				foreach my $pop (0..$NumPops-2) {			#Do pairwaise comparisons for each pair of populations.
 						
@@ -2974,7 +2975,7 @@ else {	#outputing joint SFS's
 						my $SecondPop = $comparison;
 						my $CurrentComparison = $SecondPop . $FirstPop;		
 							
-						open OUTFILE, ">ResampledSFS/Resample$RepDataset/_jointMAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
+						open OUTFILE, ">../out/formatted_files/ResampledSFS/Resample$RepDataset/_jointMAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
 							
 						
 						
@@ -3111,7 +3112,7 @@ else {	#outputing joint SFS's
 			}
 		
 		
-		print "Resampled folded joint site frequency spectra have been generated and printed to folder ResampledSFS in Formatting directory\n";	
+		print "Resampled folded joint site frequency spectra have been generated and printed to folder ../out/formatted_files/ResampledSFS in Formatting directory\n";	
 		
 		
 		}
@@ -3133,7 +3134,7 @@ else {	#outputing joint SFS's
 			#Clean up the names in SNPMatrix file.
 			
 			
-			open FILE, "../Output/Genotypes/$FileName" or die$!;
+			open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 			open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 			
 			my @LocusNames = ();
@@ -3279,7 +3280,7 @@ else {	#outputing joint SFS's
 			$RetainedReadLength = $SecondSplit[1];
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sequence/) {
 						next;
@@ -3299,7 +3300,7 @@ else {	#outputing joint SFS's
 			}
 			
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 			my @Monomorphics = ();
 			
@@ -3541,7 +3542,7 @@ else {	#outputing joint SFS's
 					my $SecondPop = $comparison;
 					my $CurrentComparison = $SecondPop . $FirstPop;		
 					
-					open OUTFILE, ">_jointMAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
+					open OUTFILE, ">../out/formatted_files/_jointMAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
 					
 				
 				
@@ -3713,13 +3714,13 @@ else {	#outputing joint SFS's
 			}
 			
 			
-			mkdir "ResampledDatasets" unless (-d "ResampledDatasets");
-			mkdir "ResampledSFS" unless (-d "ResampledSFS");
+			mkdir "../out/formatted_files/ResampledDatasets" unless (-d "../out/formatted_files/ResampledDatasets");
+			mkdir "../out/formatted_files/ResampledSFS" unless (-d "../out/formatted_files/ResampledSFS");
 			
 			#Get the number of loci in the SNPMatrix file.
 			my $TotalNumSNPs;
 			
-			open SNPMATRIX, "../Output/Genotypes/$FileName" or die$!;
+			open SNPMATRIX, "../out/Output/Genotypes/$FileName" or die$!;
 			
 			while(<SNPMATRIX>)  {
 				my @LocusNames = split(/\t/,$_);
@@ -3739,7 +3740,7 @@ else {	#outputing joint SFS's
 			
 			while(<RFILE>) {
 				if (($_ =~ /read/) && ($_ =~ /SNPMatrix/))  {
-					print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
+					print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep=\"\t\")\n";
 				}
 				
 				elsif ($_ =~ /NumLociToSample</)  {
@@ -3772,7 +3773,7 @@ else {	#outputing joint SFS's
 			
 			for my $RepDataset (1..$NumResampReps)  {
 			
-				#Create the current resampled dataset - each is stored in a folder named ResampledDatasets
+				#Create the current resampled dataset - each is stored in a folder named ../out/formatted_files/ResampledDatasets
 		
 				print "Creating resampled dataset $RepDataset of $NumResampReps\n";
 				system "R --vanilla --slave < ../RScripts/Resample_Edit.R";
@@ -3780,12 +3781,12 @@ else {	#outputing joint SFS's
 				#Rename and move the output from R
 				my $TempFileName = $FileName;
 				$TempFileName =~ s/.txt//;
-				system "mv ResampledDatasets/SNPMatrix_resamp.txt ResampledDatasets/$TempFileName.$RepDataset.txt";
+				system "mv ../out/formatted_files/ResampledDatasets/SNPMatrix_resamp.txt ../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt";
 				
 				
 				
 				#Create SFS from current resampled dataset
-				open FILE, "ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
+				open FILE, "../out/formatted_files/ResampledDatasets/$TempFileName.$RepDataset.txt" or die$!;
 				open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 		
 				my @LocusNames = ();
@@ -3944,7 +3945,7 @@ else {	#outputing joint SFS's
 				$RetainedReadLength = $SecondSplit[1];
 				
 				if ($RetainedReadLength =~ /All/) {
-					open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+					open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 					while(<MONOMORPHICINALL>)  {
 						if ($_ =~ /Sequence/) {
 							next;
@@ -3964,7 +3965,7 @@ else {	#outputing joint SFS's
 				}
 				
 				
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 					
 				my @Monomorphics = ();
 				
@@ -4136,7 +4137,7 @@ else {	#outputing joint SFS's
 					}			
 						
 			
-					mkdir "ResampledSFS/Resample$RepDataset";
+					mkdir "../out/formatted_files/ResampledSFS/Resample$RepDataset";
 			
 					foreach my $pop (0..$NumPops-2) {			#Do pairwaise comparisons for each pair of populations.
 						
@@ -4149,7 +4150,7 @@ else {	#outputing joint SFS's
 							my $SecondPop = $comparison;
 							my $CurrentComparison = $SecondPop . $FirstPop;		
 							
-							open OUTFILE, ">ResampledSFS/Resample$RepDataset/_jointDAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
+							open OUTFILE, ">../out/formatted_files/ResampledSFS/Resample$RepDataset/_jointDAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
 							
 						
 						
@@ -4259,7 +4260,7 @@ else {	#outputing joint SFS's
 			system "rm TempFiles/*";
 			system "rmdir TempFiles";
 			
-			print "Resampled unfolded joint site frequency spectra have been generated and printed to folder ResampledSFS in Formatting directory\n";	
+			print "Resampled unfolded joint site frequency spectra have been generated and printed to folder ../out/formatted_files/ResampledSFS in Formatting directory\n";	
 			
 		}
 	
@@ -4280,7 +4281,7 @@ else {	#outputing joint SFS's
 			#Clean up the names in SNPMatrix file.
 			
 			
-			open FILE, "../Output/Genotypes/$FileName" or die$!;
+			open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 			open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 			
 			my @LocusNames = ();
@@ -4428,7 +4429,7 @@ else {	#outputing joint SFS's
 			
 			
 			if ($RetainedReadLength =~ /All/) {
-				open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+				open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 				while(<MONOMORPHICINALL>)  {
 					if ($_ =~ /Sequence/) {
 						next;
@@ -4447,7 +4448,7 @@ else {	#outputing joint SFS's
 				close MONOMORPHICINALL;
 			}
 			
-			open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+			open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 				
 			my @Monomorphics = ();
 			
@@ -4633,7 +4634,7 @@ else {	#outputing joint SFS's
 					my $SecondPop = $comparison;
 					my $CurrentComparison = $SecondPop . $FirstPop;		
 					
-					open OUTFILE, ">_jointDAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
+					open OUTFILE, ">../out/formatted_files/_jointDAFpop$CurrentComparison.obs" or die$!;		#Create file for current pair of populations to store DFS.
 					
 				
 				

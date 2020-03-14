@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 
-
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 #Set parameters for the run
 
@@ -67,7 +67,7 @@ my $ambig = $RunArguments{ambig};
 
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -101,7 +101,7 @@ else {
 mkdir "TempFiles" unless (-d "TempFiles");
 	
 
-open INFILE, "../Output/Genotypes/$FileName" or die$!;
+open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 
 
 if ($SNPsOnly == 1)  {
@@ -113,7 +113,7 @@ if ($SNPsOnly == 1)  {
 		
 		while(<RSCRIPT>)  {
 			if ($_ =~ /DataTableFromFile<-read/)  {
-				print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep = \"\\t\")\n";
+				print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep = \"\\t\")\n";
 			}
 			
 			else {
@@ -291,7 +291,7 @@ if ($SNPsOnly == 1)  {
 	else {		#print all SNPs - not just unlinked SNPs
 		
 		
-		open SNPFILE, "../Output/Genotypes/$FileName" or die$!;
+		open SNPFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		
 		open SNPOUT, ">TempFiles/FASTARaw.txt" or die$!;
 		
@@ -449,7 +449,7 @@ if ($SNPsOnly == 1)  {
 	open SNPIN, "TempFiles/FASTARaw.txt" or die$!;
 	$FileName =~ s/\.txt//;
 	
-	open OUTFINAL, ">$FileName.fasta" or die$!;
+	open OUTFINAL, ">../out/formatted_files/$FileName.fasta" or die$!;
 	
 	while(<SNPIN>)  {
 		
@@ -477,7 +477,7 @@ else {	#printing all sites, including monomorphic
 	if ($ambig == 1)  {
 	
 		
-		open INFILE, "../Output/Genotypes/$FileName" or die$!;
+		open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/FASTA_In_Temp.txt" or die$!;
 		
 		#Put locus names wanted in a hash (LocusNamesWanted).  These are the locus names in the haplotypes file.
@@ -528,7 +528,7 @@ else {	#printing all sites, including monomorphic
 		#Put all locus names from GenotypesUpdate file in array Loci. 
 		#We'll reference these against the hash of locus names from the SNPMatrix file.  
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		my @Loci;
 		
@@ -559,7 +559,7 @@ else {	#printing all sites, including monomorphic
 		
 		foreach my $number  (1..$NumLociInArray) {
 			
-			open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+			open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 			my $printed = 0;
 			
@@ -590,7 +590,7 @@ else {	#printing all sites, including monomorphic
 		my $LocusLengthsArrayLength = @LocusLengths;
 
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		
 		my $CurrentFirstAlleleLine;
@@ -750,7 +750,7 @@ else {	#printing all sites, including monomorphic
 		
 		open INFILE, "TempFiles/FASTA_In_Temp.txt" or die$!;
 		$FileName =~ s/.txt$//;
-		open OUTFILE, ">$FileName.fasta" or die$!;
+		open OUTFILE, ">../out/formatted_files/$FileName.fasta" or die$!;
 		
 		while (<INFILE>)  {
 			print OUTFILE "$_";
@@ -777,7 +777,7 @@ else {	#printing all sites, including monomorphic
 	else  {		#printing all sites, including monomorphic, but not as ambiguous.
 	
 		
-		open INFILE, "../Output/Genotypes/$FileName" or die$!;
+		open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/FASTA_In_Temp.txt" or die$!;
 		
 		#Put locus names wanted in a hash (LocusNamesWanted).  These are the locus names in the SNPMatrix file.
@@ -827,7 +827,7 @@ else {	#printing all sites, including monomorphic
 		#Put all locus names from GenotypesUpdate file in array Loci. 
 		#We'll reference these against the hash of locus names from the Haplotypes file.  
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		my @Loci;
 		
@@ -857,7 +857,7 @@ else {	#printing all sites, including monomorphic
 		
 		foreach my $number  (1..$NumLociInArray) {
 			
-			open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+			open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 			
 			my $printed = 0;
@@ -890,7 +890,7 @@ else {	#printing all sites, including monomorphic
 		
 		
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		
 		my $CurrentFirstAlleleLine;
@@ -998,7 +998,7 @@ else {	#printing all sites, including monomorphic
 		
 		open INFILE, "TempFiles/FASTA_In_Temp.txt" or die$!;
 		$FileName =~ s/.txt$//;
-		open OUTFILE, ">$FileName.fasta" or die$!;
+		open OUTFILE, ">../out/formatted_files/$FileName.fasta" or die$!;
 		
 		while (<INFILE>)  {
 			print OUTFILE "$_";
@@ -1014,6 +1014,6 @@ else {	#printing all sites, including monomorphic
 }	
 			
 			
-print "File $FileName.fasta is available in Formatting directory\n";			
+print "File ../out/formatted_files/$FileName.fasta is available in Formatting directory\n";			
 			
 		

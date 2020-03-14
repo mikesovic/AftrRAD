@@ -2,9 +2,11 @@
 use warnings;
 use strict;
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
+
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -42,7 +44,7 @@ else {
 
 my $Counter1 = 0;
 
-open HAPLOTYPEFILEWITHNA, "../Output/Genotypes/$FileName" or die$!;
+open HAPLOTYPEFILEWITHNA, "../out/Output/Genotypes/$FileName" or die$!;
 open STRUCTUREFILENONA, ">OutputStructure_Infile_Temp.txt" or die$!;
 
 	while (<HAPLOTYPEFILEWITHNA>)  {
@@ -123,7 +125,7 @@ system "rm StructureInput_Temp.txt";
 	
 	
 open INFILE, "StructureInput_Temp2.txt" or die$!;
-open OUTFILE, ">StructureInput.txt" or die$!;
+open OUTFILE, ">../out/formatted_files/StructureInput.txt" or die$!;
 while (<INFILE>)  {
 	chomp($_);
 	$_ =~ s/Individual//;

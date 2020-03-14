@@ -7,7 +7,7 @@ use strict;
 #If you want to include a subset of samples from the SNPMatix file, set the subset argument to '1', and add a text file to the Formatting directory that contains the names of the samples to include.
 #The default name of this text file is IncludedSamples.txt, but can be changed with the 'file' argument.
 
-
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 #Set parameters for the run
 
@@ -67,7 +67,7 @@ my $Unlinked = $RunArguments{unlinked};
 my $FileName;
 
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -103,7 +103,7 @@ else {
 #Clean up the names in SNPMatrix file.
 
 
-open FILE, "../Output/Genotypes/$FileName" or die$!;
+open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 mkdir "TempFiles" unless (-d "TempFiles");
 open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 
@@ -336,7 +336,7 @@ if ($RunArguments{SNPsOnly} == 0) {	#Add monomorphic sites to the file
 	$RetainedReadLength = $SecondSplit[1];
 	
 	if ($RetainedReadLength =~ /All/) {
-		open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
+		open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;
 		while(<MONOMORPHICINALL>)  {
 			if ($_ =~ /Sample/) {
 				next;
@@ -355,7 +355,7 @@ if ($RunArguments{SNPsOnly} == 0) {	#Add monomorphic sites to the file
 	
 	#print "PctLociScored is $PctLociScored\n\n";
 	
-	open MONOMORPHICINALL, "../Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
+	open MONOMORPHICINALL, "../out/Output/Genotypes/Monomorphics_$PctLociScored.txt" or die$!;	
 	
 	my @Monomorphics = ();
 
@@ -465,7 +465,7 @@ close NEXUSRAW;
 #Edit raw nexus file and output a file ready to open in Beauti.
 
 open NEXUSRAW, "TempFiles/NexusRaw.txt" or die$!;
-open NEXUS, ">Beauti_Infile.nex" or die$!;
+open NEXUS, ">../out/formatted_files/Beauti_Infile.nex" or die$!;
  
 my $NumChar = $ArrayLength-1;
 

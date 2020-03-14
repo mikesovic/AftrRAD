@@ -14,6 +14,8 @@ if (! -e "PopulationsForMigrate.txt") {
 	die;
 }	
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
+
 #This script was modified from the OutputFASTA.pl script.
 
 my %RunArguments = ();
@@ -73,7 +75,7 @@ my $ambig = $RunArguments{ambig};
 
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -107,7 +109,7 @@ else {
 mkdir "TempFiles" unless (-d "TempFiles");
 	
 
-open INFILE, "../Output/Genotypes/$FileName" or die$!;
+open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 
 
 if ($SNPsOnly == 1)  {
@@ -119,7 +121,7 @@ if ($SNPsOnly == 1)  {
 		
 		while(<RSCRIPT>)  {
 			if ($_ =~ /DataTableFromFile<-read/)  {
-				print ROUT "DataTableFromFile<-read.table(\"../Output/Genotypes/$FileName\", header=TRUE, sep = \"\\t\")\n";
+				print ROUT "DataTableFromFile<-read.table(\"../out/Output/Genotypes/$FileName\", header=TRUE, sep = \"\\t\")\n";
 			}
 			
 			else {
@@ -297,7 +299,7 @@ if ($SNPsOnly == 1)  {
 	else {		#print all SNPs - not just unlinked SNPs
 		
 		
-		open SNPFILE, "../Output/Genotypes/$FileName" or die$!;
+		open SNPFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		
 		open SNPOUT, ">TempFiles/FASTARaw.txt" or die$!;
 		
@@ -484,7 +486,7 @@ else {	#printing all sites, including monomorphic
 	if ($ambig == 1)  {
 	
 		
-		open INFILE, "../Output/Genotypes/$FileName" or die$!;
+		open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/FASTA_In_Temp.txt" or die$!;
 		
 		#Put locus names wanted in a hash (LocusNamesWanted).  These are the locus names in the haplotypes file.
@@ -537,7 +539,7 @@ else {	#printing all sites, including monomorphic
 		#Put all locus names from GenotypesUpdate file in array Loci. 
 		#We'll reference these against the hash of locus names from the SNPMatrix file.  
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		my @Loci;
 		
@@ -568,7 +570,7 @@ else {	#printing all sites, including monomorphic
 		
 		foreach my $number  (1..$NumLociInArray) {
 			
-			open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+			open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 			print "Locus number $number\n";
 			
@@ -605,7 +607,7 @@ else {	#printing all sites, including monomorphic
 		
 		
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		
 		my $CurrentFirstAlleleLine;
@@ -803,7 +805,7 @@ else {	#printing all sites, including monomorphic
 	else  {		#printing all sites, including monomorphic, but not as ambiguous.
 	
 		
-		open INFILE, "../Output/Genotypes/$FileName" or die$!;
+		open INFILE, "../out/Output/Genotypes/$FileName" or die$!;
 		open OUTFILE, ">TempFiles/FASTA_In_Temp.txt" or die$!;
 		
 		#Put locus names wanted in a hash (LocusNamesWanted).  These are the locus names in the SNPMatrix file.
@@ -855,7 +857,7 @@ else {	#printing all sites, including monomorphic
 
 		## GenotypesUpdate contains the actual sequence for every locus. -- HOWEVER, we're just getting locus names here.
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;	
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;	
 		
 		my @Loci;
 		
@@ -885,7 +887,7 @@ else {	#printing all sites, including monomorphic
 		
 		foreach my $number  (1..$NumLociInArray) {
 			
-			open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+			open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 			my $printed = 0;
 			
@@ -916,7 +918,7 @@ else {	#printing all sites, including monomorphic
 		my $LocusLengthsArrayLength = @LocusLengths;
 		
 		
-		open GENOTYPES, "../TempFiles/GenotypesUpdate.txt" or die$!;
+		open GENOTYPES, "../out/TempFiles/GenotypesUpdate.txt" or die$!;
 		
 		
 		my $CurrentFirstAlleleLine;
@@ -1059,7 +1061,7 @@ else {	#printing all sites, including monomorphic
 		# print length($LociHash4{"LocusNumber9"}{"Killdeer"}{"IndividualOH_KLDR1006"}{"Allele2"});	# Size of that allele.
 		############################################################################################
 		####### Let's make the Migrate file here...
-		open MIGRATEFILE, ">Migrate_Infile.txt";	# Create the file that we will be writing to.
+		open MIGRATEFILE, ">../out/formatted_files/Migrate_Infile.txt";	# Create the file that we will be writing to.
 		my @unique_pops = uniq(@PopsForMigrate);	# Lets grab all of the unique populations for the population file you have in the directory.
 		shift(@unique_pops); # We "shift" off the first element of the array... which should just be "Population"
 		my $num_of_pops = @unique_pops;	# Get the total number of populations that are used in the creation of this file.
@@ -1111,5 +1113,5 @@ else {	#printing all sites, including monomorphic
 	
 }
 
-print "Completed OutputMigrate.pl.  A Migrate datafile named 'Migrate_Infile.txt' has been printed to the Formatting directory.\n";
+print "Completed OutputMigrate.pl.  A Migrate datafile named 'Migrate_Infile.txt' has been printed to the out/formatted_files directory.\n";
 print "This file is in Sequence data format for Migrate\n";

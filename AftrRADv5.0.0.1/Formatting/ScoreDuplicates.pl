@@ -5,7 +5,7 @@ use strict;
 
 my $FileName;
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/OutputGenotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -63,7 +63,7 @@ while (<REPLICATES>)  {
 ################################################################################################################################
 #Create file (named SlashFile) with each individual in one line with haplotypes separated by a /.
 
-open HAPLOTYPES, "../Output/Genotypes/$FileName" or die$!;
+open HAPLOTYPES, "../out/OutputGenotypes/$FileName" or die$!;
 system "mkdir TempFiles_Dup";
 
 open INFILE, ">TempFiles_Dup/SlashFile.txt" or die$!;
@@ -135,9 +135,12 @@ close HAPLOTYPES;
 
 system "cp TempFiles_Dup/SlashFile.txt TempFiles_Dup/SlashFile2.txt";
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 open HAPLOTYPES, "TempFiles_Dup/SlashFile.txt" or die$!;
-open INFILE, ">Duplicate_Report.txt" or die$!;
+
+
+open INFILE, ">../out/formatted_files/Duplicate_Report.txt" or die$!;
 print INFILE "Comparison\tSites_Compared\tNumber_Matches\tProportion_Matches\tMismatches_Homozygous_In_Sample1\tMismatches_Homozygous_In_Sample2\tLoci_With_Both_Reps_Homozygous\tLoci_With_At_Least_One_Het\n";
 			
 

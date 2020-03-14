@@ -11,6 +11,7 @@ print "\nBefore running this script, make sure...\n";
 print "1) samples in the file \"Genotypes/Output/SNPMatrix_X.Y.txt\" are ordered by population\n";
 print "2) you know the number of individuals in each population, in the order they occur in the SNPMatrix file\n";
 
+mkdir "../out/formatted_files" unless(-d "../out/formatted_files");
 
 #Set parameters for the run
 
@@ -56,7 +57,7 @@ my $FileName;
 
 #read the SNPMatrix files available for the run
 
-opendir GENOS, "../Output/Genotypes/";
+opendir GENOS, "../out/Output/Genotypes/";
 my @AllFileNames = grep { $_ ne '.' && $_ ne '..' && $_ ne '.DS_Store' } readdir(GENOS);
 close GENOS;
 
@@ -136,7 +137,7 @@ print "\n\nWorking on creating TreeMix file\n\n";
 #Clean up the names in SNPMatrix file.
 				
 				
-open FILE, "../Output/Genotypes/$FileName" or die$!;
+open FILE, "../out/Output/Genotypes/$FileName" or die$!;
 open OUTFILE, ">TempFiles/SNPMatrix_Edit.txt" or die$!;
 				
 my @LocusNames = ();
