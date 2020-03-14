@@ -1,4 +1,4 @@
-DataTableFromFile<-read.table("out/TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
+DataTableFromFile<-read.table("TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
 
 DataMatrix<-as.matrix(DataTableFromFile)
 DataFrame<-data.frame(DataMatrix)
@@ -40,7 +40,7 @@ for (a in 2:(NumColsInMatrix))  {	#Check each locus one at a time
 	
 }
 
-write.table(UnlinkedMatrix, file = "out/TempFiles/UnlinkedSNPsRaw.txt", sep = "\t",row.names=FALSE, col.names=FALSE)
+write.table(UnlinkedMatrix, file = "TempFiles/UnlinkedSNPsRaw.txt", sep = "\t",row.names=FALSE, col.names=FALSE)
 
 
 

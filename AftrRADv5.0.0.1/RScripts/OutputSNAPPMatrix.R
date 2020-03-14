@@ -1,4 +1,4 @@
-DataTableFromFile<-read.table("out/TempFiles/FinalBiallelicSNPs.txt", header=TRUE, sep = "\t")
+DataTableFromFile<-read.table("TempFiles/FinalBiallelicSNPs.txt", header=TRUE, sep = "\t")
 
 DataMatrix<-as.matrix(DataTableFromFile)
 DataFrame<-data.frame(DataMatrix, stringsAsFactors=FALSE)
@@ -51,4 +51,4 @@ for (a in 2:(NumColsInMatrix))  {
 	
 }	
 
-write.table(SNAPPMatrix, file = "out/TempFiles/SNAPPMatrixRaw.txt", sep = "\t",row.names=FALSE, col.names=FALSE)
+write.table(SNAPPMatrix, file = "TempFiles/SNAPPMatrixRaw.txt", sep = "\t",row.names=FALSE, col.names=FALSE)

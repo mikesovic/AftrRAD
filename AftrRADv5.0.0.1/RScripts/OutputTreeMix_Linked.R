@@ -2,7 +2,7 @@
 #Read in data as data frame
 
 
-DataFrame<-read.table("out/TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
+DataFrame<-read.table("TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
 
 NumRowsInFrame<-nrow(DataFrame)		#this doesn't include the locus names
 NumColsInFrame<-ncol(DataFrame)		#this does include the sample names
@@ -98,7 +98,7 @@ for (locus in 2:(NumBiallelicColumns)) {
 
 
 
-write.table(TreeMixMatrix, file = "TreeMix_Infile_AllSNPs.txt", sep = " ",row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(TreeMixMatrix, file = "../out/formatted_files/TreeMix_Infile_AllSNPs.txt", sep = " ",row.names=FALSE, col.names=TRUE, quote=FALSE)
 
 
 

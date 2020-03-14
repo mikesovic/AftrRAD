@@ -1,7 +1,7 @@
 #Read in data as data frame
 
 
-DataFrame<-read.table("out/TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
+DataFrame<-read.table("TempFiles/SingleSNPsAll.txt", header=TRUE, sep = "\t")
 
 
 NumRowsInFrame<-nrow(DataFrame)		#this doesn't include the locus names
@@ -146,7 +146,7 @@ for (locus in 2:(NumBiallelicColumns)) {
 
 
 
-write.table(UnlinkedTreeMixMatrix, file = "TreeMix_Infile_UnlinkedSNPs.txt", sep = " ",row.names=FALSE, col.names=TRUE, quote=FALSE)
+write.table(UnlinkedTreeMixMatrix, file = "../out/formatted_files/TreeMix_Infile_UnlinkedSNPs.txt", sep = " ",row.names=FALSE, col.names=TRUE, quote=FALSE)
 
 
 

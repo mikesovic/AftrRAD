@@ -17,4 +17,4 @@ for (i in columns)  {
 }
 
 
-write.table(ResampledMatrix, file="ResampledDatasets/SNPMatrix_resamp.txt", sep="\t", row.names=FALSE, col.names=FALSE)
+write.table(ResampledMatrix, file="../out/formatted_files/ResampledDatasets/SNPMatrix_resamp.txt", sep="\t", row.names=FALSE, col.names=FALSE)
